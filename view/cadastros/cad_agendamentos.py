@@ -28,7 +28,8 @@ class Cad_Agendamentos(ctk.CTkFrame):
         container_status = ctk.CTkFrame(container_date, fg_color="transparent")
         container_status.pack(side='left', padx=10)
         ctk.CTkLabel(container_status, text="Status").pack()
-        self.lista_status = self.controller.buscarStatusBD()
+
+        self.lista_status = self.controller.consultas.buscarStatusBD()
         self.input_status = ctk.CTkComboBox(container_status, values=self.lista_status, width=380, height=40, border_width=0)
         self.input_status.set("Selecione o Médico")
         self.input_status.pack(side='left')
@@ -43,7 +44,7 @@ class Cad_Agendamentos(ctk.CTkFrame):
         container_medico.pack(side='left', padx=10)
 
         ctk.CTkLabel(container_medico, text="Médico").pack()
-        self.lista_medicos = self.controller.buscarMedicosBD()
+        self.lista_medicos = self.controller.consultas.buscarMedicosBD()
         self.input_medicos = ctk.CTkComboBox(container_medico, values=self.lista_medicos, width=380, height=40, border_width=0)
         self.input_medicos.set("Selecione o Médico")
         self.input_medicos.pack(side='left')
@@ -52,7 +53,7 @@ class Cad_Agendamentos(ctk.CTkFrame):
         container_paciente.pack(side='left', padx=10)
 
         ctk.CTkLabel(container_paciente, text="Paciente").pack()
-        self.lista_pacientes = self.controller.buscarPacientesBD()
+        self.lista_pacientes = self.controller.consultas.buscarPacientesBD()
         self.input_pacientes = ctk.CTkComboBox(container_paciente, values=self.lista_pacientes, width=380, height=40, border_width=0)
         self.input_pacientes.set("Selecione o Paciente")
         self.input_pacientes.pack(side='left')

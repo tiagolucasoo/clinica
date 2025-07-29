@@ -1,5 +1,3 @@
-# Inserção dos Dados Iniciais
-
 import os
 import sqlite3
 
@@ -229,5 +227,3 @@ def INCLUIR_REGISTROS():
     DADOS_PACIENTES_DOENCAS()
     DADOS_AGENDAMENTOS()
     print('\nRegistros Inseridos com Sucesso!\n')
-
-INCLUIR_REGISTROS()

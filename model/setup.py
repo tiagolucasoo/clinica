@@ -1,8 +1,6 @@
 import sqlite3
 import os
 
-#Criação das Tabelas e do Banco
-
 def ROTA_BANCO():
     caminho_banco = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'clinica.db'))
     conn = sqlite3.connect(caminho_banco)
@@ -70,7 +68,7 @@ def BD_TABELA_MEDICOS():
             id_medico INTEGER PRIMARY KEY AUTOINCREMENT,
             nome VARCHAR(50) NOT NULL,
             data_nas DATE NOT NULL,
-            cpf VARCHAR(14) NOT NULL,
+            cpf VARCHAR(14) NOT NULL UNIQUE,
             salario DECIMAL(8,2) NOT NULL,
             rua VARCHAR(30) NOT NULL,
             numero VARCHAR(20) NOT NULL,
@@ -97,7 +95,7 @@ def BD_TABELA_PACIENTES():
             id_paciente INTEGER PRIMARY KEY AUTOINCREMENT,
             nome VARCHAR(30) NOT NULL,
             data_nasc DATE NOT NULL,
-            cpf VARCHAR(14) NOT NULL,
+            cpf VARCHAR(14) NOT NULL UNIQUE,
             telefone VARCHAR(15) NOT NULL,
             rua VARCHAR(30) NOT NULL,
             numero VARCHAR(5) NOT NULL,
@@ -120,7 +118,7 @@ def BD_TABELA_PLANOS_SAUDE():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS planos_saude(
             id_plano INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome VARCHAR(50) NOT NULL,
+            nome VARCHAR(50) NOT NULL UNIQUE,
             cobertura VARCHAR(50) NOT NULL
         )
     ''')
@@ -136,7 +134,7 @@ def BD_TABELA_PACIENTES_PLANOS():
         CREATE TABLE IF NOT EXISTS pacientes_planos(
             id_paciente_plano INTEGER PRIMARY KEY AUTOINCREMENT,
             
-            numero_carteirinha VARCHAR(50) NOT NULL,
+            numero_carteirinha VARCHAR(50) NOT NULL UNIQUE,
             validade DATE NOT NULL,
             id_paciente INTEGER NOT NULL,
             id_plano INTEGER NOT NULL,
@@ -156,8 +154,8 @@ def BD_TABELA_DOENCAS():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS doencas(
             id_doenca INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome VARCHAR(50) NOT NULL,
-            CID VARCHAR(10) NOT NULL
+            nome VARCHAR(50) NOT NULL UNIQUE,
+            CID VARCHAR(10) NOT NULL UNIQUE
         )
     ''')
     print("Tabela Doenças conectada")
@@ -172,12 +170,14 @@ def BD_TABELA_PACIENTES_DOENCAS():
         CREATE TABLE IF NOT EXISTS pacientes_doencas(
             id_paciente_doenca INTEGER PRIMARY KEY AUTOINCREMENT,
             data_diagnostico DATE NOT NULL,
+            observacao VARCHAR(100),
             
             id_paciente INTEGER NOT NULL,
             id_doenca INTEGER NOT NULL,
             
             FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente),
-            FOREIGN KEY (id_doenca) REFERENCES doencas(id_doenca)
+            FOREIGN KEY (id_doenca) REFERENCES doencas(id_doenca),
+            UNIQUE (id_paciente, id_doenca, data_diagnostico)
         )
     ''')
     print("Tabela Pacientes Doenças conectada")
@@ -199,7 +199,8 @@ def BD_TABELA_AGENDAMENTOS():
             id_medico INTEGER NOT NULL,
             
             FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente),
-            FOREIGN KEY (id_medico) REFERENCES medicos(id_medico)
+            FOREIGN KEY (id_medico) REFERENCES medicos(id_medico),
+            UNIQUE (id_paciente, id_medico, data_agendamento)
         )
     ''')
     print("Tabela Agendamentos conectada\n")
@@ -219,5 +220,3 @@ def INICIAR_BANCO():
     BD_TABELA_PACIENTES_DOENCAS()
     BD_TABELA_AGENDAMENTOS()
     print("Banco de Dados carregado com sucesso!\n")
-
-INICIAR_BANCO()

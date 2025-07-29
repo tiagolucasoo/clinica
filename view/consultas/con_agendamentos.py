@@ -15,9 +15,10 @@ class Con_Agendamentos(ctk.CTkFrame):
         fonte = ("Consolas", 12)
         lista = consultas_controller.conf_agendamentos()
 
-        self.listagem = ctk.CTkTextbox(self, width=1200, font=fonte)
+        self.listagem = ctk.CTkTextbox(self, width=1200, height=700, font=fonte)
         self.listagem.pack()
 
         self.listagem.insert("1.0", lista)
         self.listagem.configure(state="disabled")
         print(lista)
+        

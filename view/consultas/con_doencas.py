@@ -4,7 +4,7 @@ from tkinter import messagebox
 from model.model import Consultas
 from controller.controller import Consultas_Model, Controller
 
-class Con_Medicos(ctk.CTkFrame):
+class Con_Doencas(ctk.CTkFrame):
     def __init__(self, parent, controller_instance):
         super().__init__(parent)
 
@@ -13,7 +13,7 @@ class Con_Medicos(ctk.CTkFrame):
         consultas_controller = Consultas_Model(model)
         
         fonte = ("Consolas", 12)
-        lista = consultas_controller.conf_medicos()
+        lista = consultas_controller.conf_doencas()
 
         self.listagem = ctk.CTkTextbox(self, width=1200, height=700, font=fonte)
         self.listagem.pack()

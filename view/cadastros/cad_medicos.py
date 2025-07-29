@@ -29,7 +29,7 @@ class Cad_Medicos(ctk.CTkFrame):
         container_especialidade.pack(side='top', pady=20)
         ctk.CTkLabel(container_especialidade, text="Especialidade").pack()
 
-        self.lista_especialidades = self.controller.buscarEspecialidadesBD()
+        self.lista_especialidades = self.controller.consultas.buscarEspecialidadesBD()
         self.input_especialidades = ctk.CTkComboBox(container_especialidade, values=self.lista_especialidades, width=780, height=40, border_width=0)
         self.input_especialidades.set("Selecione a Especialidade")
         self.input_especialidades.pack(side='left')
@@ -75,7 +75,7 @@ class Cad_Medicos(ctk.CTkFrame):
         container_cidade.pack(side='left', padx=10)
         ctk.CTkLabel(container_cidade, text="Cidade").pack(side='top')
 
-        self.lista_cidades = self.controller.buscarCidadesBD()
+        self.lista_cidades = self.controller.consultas.buscarCidadesBD()
         self.input_cidades = ctk.CTkComboBox(container_cidade, values=self.lista_cidades, width=380, height=40, border_width=0)
         self.input_cidades.set("Selecione a Cidade")
         self.input_cidades.pack(side='left')

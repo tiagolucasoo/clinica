@@ -1,3 +1,4 @@
+#Retorna os dados para o CTK Text com a formatação
 class Consultas_Model:
     def __init__(self, model_db):
         self._model_db = model_db
@@ -37,22 +38,69 @@ class Consultas_Model:
             linha = "".join(str(item).ljust(w) for item, w in zip(paciente, largura))
             formatacao += linha + "\n"
         return formatacao
+    def conf_doencas(self):
+        doencas = self._model_db.consulta_doencas()
+        largura = [5, 40, 10, 20]
+        cabecalho = ["ID", "DESCRIÇÃO", "CID", "PACIENTES"]
+        conf_cabecalho = "".join(text.ljust(w) for text, w in zip(cabecalho, largura))
+        formatacao = conf_cabecalho + "\n"
+        formatacao += "-" * sum(largura) + "\n"
+
+        for doenca in doencas:
+            linha = "".join(str(item).ljust(w) for item, w in zip(doenca, largura))
+            formatacao += linha + "\n"
+        return formatacao
+    def conf_especialidades(self):
+        especialidades = self._model_db.consulta_especialidades()
+        largura = [5, 40, 20]
+        cabecalho = ["ID", "DESCRIÇÃO", "MÉDICOS"]
+        conf_cabecalho = "".join(text.ljust(w) for text, w in zip(cabecalho, largura))
+        formatacao = conf_cabecalho + "\n"
+        formatacao += "-" * sum(largura) + "\n"
+
+        for especialidade in especialidades:
+            linha = "".join(str(item).ljust(w) for item, w in zip(especialidade, largura))
+            formatacao += linha + "\n"
+        return formatacao
+    def conf_pacientes_doencas(self):
+        pacientes_doencas = self._model_db.consulta_pacientes_doencas()
+        largura = [35, 20, 30, 20, 25, 15]
+        #p.nome, pd.data_diagnostico, d.nome, plan.nome, pp.numero_carteirinha, pp.validade
+        cabecalho = ["PACIENTE", "DATA DIAGNÓSTICO", "OCORRÊNCIA", "PLANO", "CARTEIRINHA", "VÁLIDO ATÉ"]
+        conf_cabecalho = "".join(text.ljust(w) for text, w in zip(cabecalho, largura))
+        formatacao = conf_cabecalho + "\n"
+        formatacao += "-" * sum(largura) + "\n"
+
+        for paciente_doenca in pacientes_doencas:
+            linha = "".join(str(item).ljust(w) for item, w in zip(paciente_doenca, largura))
+            formatacao += linha + "\n"
+        return formatacao
+
+# Retorna os dados para os combo box
+class Consultas_Controller:
+    def __init__(self, model_db):
+        self._model_db = model_db
+    def buscarCidadesBD(self):
+        return self._model_db.combo_box.buscarCidades()
+    def buscarEspecialidadesBD(self):
+        return self._model_db.combo_box.buscarEspecialidades()
+    def buscarMedicosBD(self):
+        return self._model_db.combo_box.buscarMedicos()
+    def buscarPacientesBD(self):
+        return self._model_db.combo_box.buscarPacientes()
+    def buscarStatusBD(self):
+        return self._model_db.combo_box.buscarStatus()
+    def buscarPlanosBD(self):
+        return self._model_db.combo_box.buscarPlanos()
+    def buscarDoencasBD(self):
+        return self._model_db.combo_box.buscarDoencas()
 
 class Controller:
     def __init__(self, model_db):
         self._model_db = model_db
+        self.consultas = Consultas_Controller(model_db)
     def set_app(self, app):
         self.app = app
-    def buscarCidadesBD(self):
-        return self._model_db.buscarCidades()
-    def buscarEspecialidadesBD(self):
-        return self._model_db.buscarEspecialidades()
-    def buscarMedicosBD(self):
-        return self._model_db.buscarMedicos()
-    def buscarPacientesBD(self):
-        return self._model_db.buscarPacientes()
-    def buscarStatusBD(self):
-        return self._model_db.buscarStatus()
 
     def cadastrarMedico(self, nome, nasc, especialidade, cpf, salario, cidade, rua, numero, complemento):
         if not self.validacaoMedico(nome, nasc, especialidade, cpf, salario, cidade, rua, numero, complemento):
@@ -75,7 +123,7 @@ class Controller:
         cidade = id_city
 
         print(f"Controller: Tentando cadastrar o médico: {nome}")
-        if self._model_db.salvarMedico(nome, nasc, especialidade, cpf, salario, cidade, rua, numero, complemento):
+        if self._model_db.salvar.salvarMedico(nome, nasc, especialidade, cpf, salario, cidade, rua, numero, complemento):
             print("Controller: Médico salvo com sucesso via Model.")
             return True
         else:
@@ -103,7 +151,7 @@ class Controller:
         cidade = id_city
 
         print(f"Controller: Tentando cadastrar o médico: {nome}")
-        if self._model_db.salvarPaciente(nome, nasc, email, telefone, cpf, renda, cidade, rua, numero, complemento):
+        if self._model_db.salvar.salvarPaciente(nome, nasc, email, telefone, cpf, renda, cidade, rua, numero, complemento):
             print("Controller: Paciente salvo com sucesso via Model.")
             return True
         else:
@@ -146,7 +194,7 @@ class Controller:
             print("Controller: Especialidade não encontrada.")
 
         print(f"Controller: Tentando cadastrar o médico: {status}")
-        if self._model_db.salvarAgendamento(data, hora, status, paciente, medico):
+        if self._model_db.salvar.salvarAgendamento(data, hora, status, paciente, medico):
             print("Controller: Médico salvo com sucesso via Model.")
             return True
         else:

@@ -79,7 +79,7 @@ class Cad_Pacientes(ctk.CTkFrame):
         container_cidade.pack(side='left', padx=10)
         ctk.CTkLabel(container_cidade, text="Cidade").pack(side='top')
 
-        self.lista_cidades = self.controller.buscarCidadesBD()
+        self.lista_cidades = self.controller.consultas.buscarCidadesBD()
         self.input_cidades = ctk.CTkComboBox(container_cidade, values=self.lista_cidades, width=380, height=40, border_width=0)
         self.input_cidades.set("Selecione a Cidade")
         self.input_cidades.pack(side='left')

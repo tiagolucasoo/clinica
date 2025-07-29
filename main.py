@@ -3,17 +3,25 @@ import os
 from tkinter import Menu, messagebox
 
 from controller.controller import Controller
+
 from model.model import Model
+from model.setup import INICIAR_BANCO
+from model.seed_data import INCLUIR_REGISTROS
 
 from view.pag_inicial import view_inicial
 
 from view.cadastros.cad_agendamentos import Cad_Agendamentos
 from view.cadastros.cad_medicos import Cad_Medicos
 from view.cadastros.cad_pacientes import Cad_Pacientes
+from view.cadastros.cad_pacientes_planos import Cad_Paciente_plano
+from view.cadastros.cad_pacientes_doencas import Cad_Paciente_doenca
 
 from view.consultas.con_agendamentos import Con_Agendamentos
 from view.consultas.con_medicos import Con_Medicos
 from view.consultas.con_pacientes import Con_Pacientes
+from view.consultas.con_doencas import Con_Doencas
+from view.consultas.con_especialidades import Con_Especialidades
+from view.consultas.con_pacientes_doencas import Con_Pacientes_doencas
 
 class App(ctk.CTk):
     def __init__(self):
@@ -23,11 +31,12 @@ class App(ctk.CTk):
         self.title("TLG ADMIN - Sistema de Clínica")
 
         os.system('cls')
-
         self.model = Model()
-        self.controller = Controller(model_db=self.model)
-        #self.controller.set_app(self)
+        
+        INICIAR_BANCO()
+        INCLUIR_REGISTROS()
 
+        self.controller = Controller(model_db=self.model)
         self.telas = {}
 
         container = ctk.CTkFrame(master=self, fg_color="transparent")
@@ -35,7 +44,8 @@ class App(ctk.CTk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        for tela in (Cad_Agendamentos, Con_Agendamentos, Cad_Medicos, Con_Medicos, Cad_Pacientes, Con_Pacientes, view_inicial):
+        for tela in (Cad_Agendamentos, Con_Agendamentos, Cad_Medicos, Con_Medicos, Cad_Pacientes, Con_Pacientes, view_inicial, Con_Doencas, Con_Especialidades,
+                     Con_Pacientes_doencas, Cad_Paciente_plano, Cad_Paciente_doenca):
             nome = tela.__name__
             frame = tela(parent=container, controller_instance=self.controller)
             self.telas[nome] = frame
@@ -57,12 +67,17 @@ class App(ctk.CTk):
         menu_cadastro.add_command(label="Agendamentos", command=lambda: self.exibir_tela("Cad_Agendamentos"))
         menu_cadastro.add_command(label="Médicos", command=lambda: self.exibir_tela("Cad_Medicos"))
         menu_cadastro.add_command(label="Pacientes", command=lambda: self.exibir_tela("Cad_Pacientes"))
+        menu_cadastro.add_command(label="Planos Pacientes", command=lambda: self.exibir_tela("Cad_Paciente_plano"))
+        menu_cadastro.add_command(label="Pacientes Doenças", command=lambda: self.exibir_tela("Cad_Paciente_doenca"))
         barra_menu.add_cascade(label="Cadastro", menu=menu_cadastro)
 
         menu_consulta = Menu(barra_menu, tearoff=0)
         menu_consulta.add_command(label="Agendamentos", command=lambda: self.exibir_tela("Con_Agendamentos"))
         menu_consulta.add_command(label="Médicos", command=lambda: self.exibir_tela("Con_Medicos"))
         menu_consulta.add_command(label="Pacientes", command=lambda: self.exibir_tela("Con_Pacientes"))
+        menu_consulta.add_command(label="Doenças", command=lambda: self.exibir_tela("Con_Doencas"))
+        menu_consulta.add_command(label="Especialidades", command=lambda: self.exibir_tela("Con_Especialidades"))
+        menu_consulta.add_command(label="Pacientes (Situação)", command=lambda: self.exibir_tela("Con_Pacientes_doencas"))
         barra_menu.add_cascade(label="Consultas", menu=menu_consulta)
 
         menu_aparencia = Menu(barra_menu, tearoff=0)
@@ -73,7 +88,8 @@ class App(ctk.CTk):
         self.configure(menu=barra_menu)
 
     def exibir_tela(self, nome_tela):
-        self.telas[nome_tela].tkraise()
+        frame = self.telas[nome_tela]
+        frame.tkraise()
 
     def exibir_mensagem_sucesso(self, mensagem):
         messagebox.showinfo("Sucesso", mensagem, parent=self)
