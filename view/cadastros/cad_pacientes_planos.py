@@ -25,10 +25,10 @@ class Cad_Paciente_plano(ctk.CTkFrame):
         container_medico = ctk.CTkFrame(container_dados, fg_color="transparent")
         container_medico.pack(side='left', padx=10)
 
-        ctk.CTkLabel(container_medico, text="Médico").pack()
+        ctk.CTkLabel(container_medico, text="Plano de Saúde").pack()
         self.lista_planos = self.controller.consultas.buscarPlanosBD()
         self.input_planos = ctk.CTkComboBox(container_medico, values=self.lista_planos, width=380, height=40, border_width=0)
-        self.input_planos.set("Selecione o Médico")
+        self.input_planos.set("Selecione o Plano de Saúde")
         self.input_planos.pack(side='left')
 
 
@@ -40,14 +40,14 @@ class Cad_Paciente_plano(ctk.CTkFrame):
         container_data = ctk.CTkFrame(container_date, fg_color="transparent")
         container_data.pack(side='left', padx=10)
         ctk.CTkLabel(container_data, text="Nº Carteirinha").pack()
-        self.input_data = ctk.CTkEntry(container_data, placeholder_text="Dr. João da Silva", width=380, height=40, border_width=0)
-        self.input_data.pack(side='left')
+        self.input_carteirinha = ctk.CTkEntry(container_data, placeholder_text="12345678910", width=380, height=40, border_width=0)
+        self.input_carteirinha.pack(side='left')
         
         container_hora = ctk.CTkFrame(container_date, fg_color="transparent")
         container_hora.pack(side='left', padx=10)
         ctk.CTkLabel(container_hora, text="Validade").pack()
-        self.input_hora = ctk.CTkEntry(container_hora, placeholder_text="Dr. João da Silva", width=380, height=40, border_width=0)
-        self.input_hora.pack(side='left')
+        self.input_validade = ctk.CTkEntry(container_hora, placeholder_text="DD/MM/AAAA", width=380, height=40, border_width=0)
+        self.input_validade.pack(side='left')
 
 
 
@@ -55,27 +55,28 @@ class Cad_Paciente_plano(ctk.CTkFrame):
         container_button = ctk.CTkFrame(self, fg_color="transparent")
         container_button.pack(side='top', pady=20)
 
-        salvar = ctk.CTkButton(container_button, text="Salvar", command=self.salvar_dados_paciente, width=380, height=60)
+        salvar = ctk.CTkButton(container_button, text="Salvar", command=self.salvar_dados_plano_paciente, width=380, height=60)
         salvar.pack(side='left', padx=10)
         
         limpar = ctk.CTkButton(container_button, text="Limpar Campos", command=self.limpar_campos, fg_color="gray", width=380, height=60)
         limpar.pack(side='right', padx=10)
 
-    def salvar_dados_paciente(self):
-        data = self.input_data.get()
-        hora = self.input_hora.get()
-        status = self.input_status.get()
+    def salvar_dados_plano_paciente(self):
         paciente = self.input_pacientes.get()
+        numero_carteirinha = self.input_carteirinha.get()
+        validade = self.input_validade.get()
+        plano = self.input_planos.get()
 
         # Envia os dados para o controller e verifica o resultado
-        if self.controller.cadastrarAgendamento(data, hora, status, paciente, medico):
-            messagebox.showinfo("Sucesso", "Paciente cadastrado com sucesso!")
+        if self.controller.cadastrarPlanoPaciente(plano, paciente, numero_carteirinha, validade):
+            messagebox.showinfo("Sucesso", "Plano Paciente cadastrado com sucesso!")
             self.limpar_campos()
         else:
-            messagebox.showerror("Erro", "Falha ao cadastrar o paciente. Verifique os dados e tente novamente.")
+            messagebox.showerror("Erro", "Falha ao cadastrar o Plano Paciente. Verifique os dados e tente novamente.")
     
     def limpar_campos(self):
-        data = self.input_data.delete(0, 'end')
-        hora = self.input_hora.delete(0, 'end')
-        status = self.input_status.set("Selecione o Status")
         paciente = self.input_pacientes.set("Selecione o Paciente")
+        plano = self.input_planos.set("Selecione o Plano de Saúde")
+        numero_carteirinha = self.input_carteirinha.delete(0, 'end')
+        validade = self.input_validade.delete(0, 'end')
+

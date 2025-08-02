@@ -6,9 +6,6 @@ def ROTA_BANCO():
         conn = sqlite3.connect(caminho_banco)
         return conn
 
-class Validacoes:
-    pass
-
 class Registros:
     def salvarMedico(self, nome, nasc, especialidade, cpf, salario, cidade, rua, numero, complemento):
         conn = ROTA_BANCO()
@@ -19,7 +16,6 @@ class Registros:
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (nome, nasc, especialidade, cpf, salario, rua, numero, complemento, cidade))
             conn.commit()
-            print("Model: Médico salvo com sucesso no banco de dados.")
             return True
         except sqlite3.IntegrityError as e:
             print(f"Erro de integridade ao salvar médico: {e}")
@@ -39,7 +35,6 @@ class Registros:
                 VALUES (?, ?, ?, ?, ?)""",
                 (data, hora, status, paciente, medico))
             conn.commit()
-            print("Model: Médico salvo com sucesso no banco de dados.")
             return True
         except sqlite3.IntegrityError as e:
             print(f"Erro de integridade ao salvar médico: {e}")
@@ -58,9 +53,48 @@ class Registros:
             cursor.execute("""
                 INSERT INTO pacientes (nome, email, telefone, data_nasc, cpf, renda_familiar, rua, numero, complemento, id_cidade)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (nome, nasc, email, telefone, cpf, renda, cidade, rua, numero, complemento))
+                (nome, email, telefone, nasc, cpf, renda, rua, numero, complemento, cidade))
             conn.commit()
-            print("Model: Paciente salvo com sucesso no banco de dados.")
+            return True
+        except sqlite3.IntegrityError as e:
+            print(f"Erro de integridade ao salvar Paciente: {e}")
+            return False
+        except Exception as e:
+            print(f"Erro geral ao salvar Paciente: {e}")
+            return False
+        finally:
+            conn.close()
+    
+    def salvarPlanoPaciente(self, numero_carteirinha, validade, paciente, plano):
+        conn = ROTA_BANCO()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("""
+                INSERT INTO pacientes_planos (numero_carteirinha, id_plano, id_paciente, validade)
+                VALUES (?, ?, ?, ?)""",
+                (numero_carteirinha, plano, paciente, validade))
+            conn.commit()
+            return True
+        except sqlite3.IntegrityError as e:
+            print(f"Erro de integridade ao salvar Paciente: {e}")
+            return False
+        except Exception as e:
+            print(f"Erro geral ao salvar Paciente: {e}")
+            return False
+        finally:
+            conn.close()
+    
+    def salvarPacienteDoenca(self, paciente, doencas, observacao, data):
+        conn = ROTA_BANCO()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("""
+                INSERT INTO pacientes_doencas (id_paciente, id_doenca, observacao, data_diagnostico)
+                VALUES (?, ?, ?, ?)""",
+                (paciente, doencas, observacao, data))
+            conn.commit()
             return True
         except sqlite3.IntegrityError as e:
             print(f"Erro de integridade ao salvar Paciente: {e}")
@@ -156,12 +190,11 @@ class Consultas:
         conn = ROTA_BANCO()
         cursor = conn.cursor()
         cursor.execute("""
-                       SELECT id_paciente, p.nome, p.cpf,
-                       --CAST((strftime('%Y', 'now') - strftime('%Y', p.data_nasc)) AS INTEGER) AS Idade,
+                       SELECT p.id_paciente, p.nome, p.cpf,
                        CAST((julianday('now') - julianday(p.data_nasc)) / 365.25 AS INTEGER) AS Idade,
                        p.email, p.telefone, c.nome, p.rua, p.numero
                        FROM pacientes p
-                       INNER JOIN cidades c ON (c.id_cidade = p.id_cidade)
+                       LEFT JOIN cidades c ON (c.id_cidade = p.id_cidade)
                        """)
         dados = cursor.fetchall()
         conn.close()
@@ -282,6 +315,32 @@ class Model:
         resultado = None
         try:
             cursor.execute("""SELECT id_paciente FROM pacientes WHERE nome = ?""", (paciente,))
+            resultado = cursor.fetchone() 
+            
+        except Exception as e:
+            print(f"Erro ao buscar cidade: {e}")
+        finally:
+            conn.close()
+        return resultado[0] if resultado else None
+    def buscarIdPlanos(self, plano):
+        conn = ROTA_BANCO()
+        cursor = conn.cursor()
+        resultado = None
+        try:
+            cursor.execute("""SELECT id_plano FROM planos_saude WHERE nome = ?""", (plano,))
+            resultado = cursor.fetchone() 
+            
+        except Exception as e:
+            print(f"Erro ao buscar cidade: {e}")
+        finally:
+            conn.close()
+        return resultado[0] if resultado else None
+    def buscarIdDoencas(self, doencas):
+        conn = ROTA_BANCO()
+        cursor = conn.cursor()
+        resultado = None
+        try:
+            cursor.execute("""SELECT id_doenca FROM doencas WHERE nome = ?""", (doencas,))
             resultado = cursor.fetchone() 
             
         except Exception as e:

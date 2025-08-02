@@ -37,6 +37,7 @@ class App(ctk.CTk):
         INCLUIR_REGISTROS()
 
         self.controller = Controller(model_db=self.model)
+        self.controller.set_app(self)
         self.telas = {}
 
         container = ctk.CTkFrame(master=self, fg_color="transparent")
@@ -44,8 +45,8 @@ class App(ctk.CTk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        for tela in (Cad_Agendamentos, Con_Agendamentos, Cad_Medicos, Con_Medicos, Cad_Pacientes, Con_Pacientes, view_inicial, Con_Doencas, Con_Especialidades,
-                     Con_Pacientes_doencas, Cad_Paciente_plano, Cad_Paciente_doenca):
+        for tela in (Cad_Agendamentos, Cad_Paciente_plano, Cad_Paciente_doenca, Cad_Medicos, Cad_Pacientes,  view_inicial,
+                     Con_Pacientes_doencas, Con_Agendamentos, Con_Medicos, Con_Pacientes, Con_Doencas, Con_Especialidades):
             nome = tela.__name__
             frame = tela(parent=container, controller_instance=self.controller)
             self.telas[nome] = frame

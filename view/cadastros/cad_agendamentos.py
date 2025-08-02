@@ -16,13 +16,13 @@ class Cad_Agendamentos(ctk.CTkFrame):
         container_data = ctk.CTkFrame(container_date, fg_color="transparent")
         container_data.pack(side='left', padx=10)
         ctk.CTkLabel(container_data, text="Data").pack()
-        self.input_data = ctk.CTkEntry(container_data, placeholder_text="Dr. João da Silva", width=180, height=40, border_width=0)
+        self.input_data = ctk.CTkEntry(container_data, placeholder_text="Formato: DD/MM/AAAA", width=180, height=40, border_width=0)
         self.input_data.pack(side='left')
         
         container_hora = ctk.CTkFrame(container_date, fg_color="transparent")
         container_hora.pack(side='left', padx=10)
         ctk.CTkLabel(container_hora, text="Horário").pack()
-        self.input_hora = ctk.CTkEntry(container_hora, placeholder_text="Dr. João da Silva", width=180, height=40, border_width=0)
+        self.input_hora = ctk.CTkEntry(container_hora, placeholder_text="Formato: HH:MM", width=180, height=40, border_width=0)
         self.input_hora.pack(side='left')
 
         container_status = ctk.CTkFrame(container_date, fg_color="transparent")
@@ -31,7 +31,7 @@ class Cad_Agendamentos(ctk.CTkFrame):
 
         self.lista_status = self.controller.consultas.buscarStatusBD()
         self.input_status = ctk.CTkComboBox(container_status, values=self.lista_status, width=380, height=40, border_width=0)
-        self.input_status.set("Selecione o Médico")
+        self.input_status.set("Selecione o Status")
         self.input_status.pack(side='left')
 
 
@@ -79,10 +79,10 @@ class Cad_Agendamentos(ctk.CTkFrame):
 
         # Envia os dados para o controller e verifica o resultado
         if self.controller.cadastrarAgendamento(data, hora, status, paciente, medico):
-            messagebox.showinfo("Sucesso", "Paciente cadastrado com sucesso!")
+            messagebox.showinfo("Sucesso", "Agendamento cadastrado com sucesso!")
             self.limpar_campos()
         else:
-            messagebox.showerror("Erro", "Falha ao cadastrar o paciente. Verifique os dados e tente novamente.")
+            messagebox.showerror("Erro", "Falha ao cadastrar o Agendamento. Verifique os dados e tente novamente.")
     
     def limpar_campos(self):
         data = self.input_data.delete(0, 'end')

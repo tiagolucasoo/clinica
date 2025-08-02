@@ -19,7 +19,7 @@ class Cad_Pacientes(ctk.CTkFrame):
         container_nome.pack(side='top', pady=20)
 
         ctk.CTkLabel(container_nome, text="Nome Completo").pack()
-        self.input_nome = ctk.CTkEntry(container_nome, placeholder_text="Dr. João da Silva", width=780, height=40, border_width=0)
+        self.input_nome = ctk.CTkEntry(container_nome, placeholder_text="João da Silva", width=780, height=40, border_width=0)
         self.input_nome.pack()
 
 
@@ -31,13 +31,13 @@ class Cad_Pacientes(ctk.CTkFrame):
         container_email = ctk.CTkFrame(container_contato, fg_color="transparent")
         container_email.pack(side='left', padx=10)
         ctk.CTkLabel(container_email, text="Email").pack()
-        self.input_email = ctk.CTkEntry(container_email, placeholder_text="Dr. João da Silva", width=380, height=40, border_width=0)
+        self.input_email = ctk.CTkEntry(container_email, placeholder_text="Ex Tiagolucas@gmail.com", width=380, height=40, border_width=0)
         self.input_email.pack(side='left')
         
         container_telefone = ctk.CTkFrame(container_contato, fg_color="transparent")
         container_telefone.pack(side='left', padx=10)
         ctk.CTkLabel(container_telefone, text="Telefone").pack()
-        self.input_telefone = ctk.CTkEntry(container_telefone, placeholder_text="Dr. João da Silva", width=380, height=40, border_width=0)
+        self.input_telefone = ctk.CTkEntry(container_telefone, placeholder_text="Ex: 43 99888-7777", width=380, height=40, border_width=0)
         self.input_telefone.pack(side='left')
 
 

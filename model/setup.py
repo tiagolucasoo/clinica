@@ -73,7 +73,6 @@ def BD_TABELA_MEDICOS():
             rua VARCHAR(30) NOT NULL,
             numero VARCHAR(20) NOT NULL,
             complemento VARCHAR(20),
-            especialidade VARCHAR(40),
             
             id_cidade INTEGER NOT NULL,
             id_especialidade INTEGER NOT NULL,
